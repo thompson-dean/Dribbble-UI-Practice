@@ -20,49 +20,50 @@ var data: [Card] = [
     Card(imageString: "Abstract", title: "Geometry 3D Elements", description: "Hold up a rectangle piece of paper and ask all the favourite students."),
     Card(imageString: "Abstract", title: "Abstract 3D Elements", description: "An abstract may act as stand-alone entity instead of a full paper."),
     Card(imageString: "Abstract", title: "Geometry 3D Elements", description: "Hold up a rectangle piece of paper and ask all the favourite students."),
-    Card(imageString: "Abstract", title: "Abstract 3D Elements", description: "An abstract may act as stand-alone entity instead of a full paper."),
-    Card(imageString: "Abstract", title: "Geometry 3D Elements", description: "Hold up a rectangle piece of paper and ask all the favourite students."),
-    Card(imageString: "Abstract", title: "Abstract 3D Elements", description: "An abstract may act as stand-alone entity instead of a full paper."),
-    Card(imageString: "Abstract", title: "Geometry 3D Elements", description: "Hold up a rectangle piece of paper and ask all the favourite students."),
-    Card(imageString: "Abstract", title: "Geometry 3D Elements", description: "Hold up a rectangle piece of paper and ask all the favourite students."),
-    Card(imageString: "Abstract", title: "Abstract 3D Elements", description: "An abstract may act as stand-alone entity instead of a full paper."),
-    Card(imageString: "Abstract", title: "Geometry 3D Elements", description: "Hold up a rectangle piece of paper and ask all the favourite students.")
+    Card(imageString: "Abstract", title: "Abstract 3D Elements", description: "An abstract may act as stand-alone entity instead of a full paper.")
 
 ]
 
 
-var names = ["Dean", "Dom"]
-
 struct ContentView: View {
    
     @State private var focusedButton = 0
+    @State private var taskBarFocus = 0
     
     var body: some View {
-        ZStack {
-            Color(hex: "F8F8F8")
-                .ignoresSafeArea()
-            
-            VStack {
-                Header()
+        NavigationView {
+            ZStack {
+                Color(hex: "F8F8F8")
+                    .ignoresSafeArea(.all)
                 
-                SearchBar()
-                
-                Buttons(focusedButton: $focusedButton)
-                
-                Cards()
-               
-                
-                
-                
-                
+                VStack {
+                    Header()
+                    
+                    SearchBar()
+                        
+                    
+                    Buttons(focusedButton: $focusedButton)
+                        .padding(.top, 20)
+                    
+                    Cards()
+                        .padding(.top, 15)
+                    
+                    TaskBar(taskBarFocus: $taskBarFocus)
+                        .offset(y: 35)
+                    
+
+                }
             }
+            .navigationBarHidden(true)
         }
+        
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .previewInterfaceOrientation(.portrait)
     }
 }
 
@@ -111,7 +112,6 @@ struct SearchBar: View {
         .background(.white)
         .cornerRadius(14)
         .padding(.horizontal, 30)
-        .padding(.top, 5)
     }
 }
 
@@ -201,7 +201,6 @@ struct Buttons: View {
 
 
         }
-        .padding(.top, 20)
     }
 }
 
@@ -210,7 +209,7 @@ struct Cards: View {
     
     
     var body: some View {
-        VStack(alignment: .leading, spacing: -50) {
+        VStack(alignment: .leading, spacing: 5) {
             HStack {
                 Text("Recommended Products")
                     .font(.system(size: 22, weight: .semibold, design: .serif))
@@ -219,6 +218,7 @@ struct Cards: View {
                 Spacer()
             }
             .padding(.horizontal, 30)
+            .padding(.bottom)
             
             ScrollView(.horizontal) {
                 LazyHStack {
@@ -247,7 +247,6 @@ struct Cards: View {
                         .frame(width: 280, height: 340)
                         .background(Color.white)
                         .cornerRadius(25)
-                        
                         .padding(.leading, 30)
                     }
                 }
@@ -255,6 +254,72 @@ struct Cards: View {
             }
             
         }
-        .padding(.top, 25)
+    }
+}
+
+//MARK: - Task Bar
+
+struct TaskBar: View {
+    
+    @Binding var taskBarFocus: Int
+    
+    var body: some View {
+        HStack(spacing: 60) {
+            
+            VStack {
+                Image(systemName: "house")
+                    .font(.system(size: 26))
+                Circle()
+                    .frame(width: 5, height: 5)
+                    .opacity(taskBarFocus == 0 ? 1 : 0)
+            }
+            .tag(0)
+            .onTapGesture {
+                taskBarFocus = 0
+            }
+            
+            
+            VStack {
+                Image(systemName: "heart")
+                    .font(.system(size: 26))
+                Circle()
+                    .frame(width: 5, height: 5)
+                    .opacity(taskBarFocus == 1 ? 1 : 0)
+            }
+            .tag(1)
+            .onTapGesture {
+                taskBarFocus = 1
+            }
+            
+            VStack {
+                Image(systemName: "cube")
+                    .font(.system(size: 26))
+                Circle()
+                    .frame(width: 5, height: 5)
+                    .opacity(taskBarFocus == 2 ? 1 : 0)
+            }
+            .tag(2)
+            .onTapGesture {
+                taskBarFocus = 2
+            }
+            
+            VStack {
+                Image(systemName: "person")
+                    .font(.system(size: 26))
+                Circle()
+                    .frame(width: 5, height: 5)
+                    .opacity(taskBarFocus == 3 ? 1 : 0)
+            }
+            .tag(3)
+            .onTapGesture {
+                taskBarFocus = 3
+            }
+            
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 90)
+        .background(Color.accentColor)
+        .foregroundColor(.white)
+        .cornerRadius(20)
     }
 }
